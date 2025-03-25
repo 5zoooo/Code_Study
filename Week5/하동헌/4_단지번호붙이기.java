@@ -5,8 +5,8 @@ public class Main {
     private static int N;
     private static int[][] map;
     private static boolean[][] visited;
-    private static int[] row = {-1, 1, 0, 0}; // 상, 하
-    private static int[] col = {0, 0, -1, 1}; // 좌, 우
+    private static int[] di = {-1, 1, 0, 0}; // 상, 하
+    private static int[] dj = {0, 0, -1, 1}; // 좌, 우
     private static int cnt;
 
     public static void main(String[] args) throws IOException {
@@ -26,10 +26,10 @@ public class Main {
         ArrayList<Integer> list = new ArrayList<>();
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < N; j++) {
-                if (!visited[i][j] && map[i][j] == 1) {
-                    // 새로운 단지 시작
+                if (!visited[i][j] && map[i][j] == 1) { // 새로운 단지 시작
                     cnt = 0;
-                    dfs(i, j); // bfs(i, j);
+                    dfs(i, j);
+                    // bfs(i, j);
                     list.add(cnt);
                 }
             }
@@ -51,12 +51,12 @@ public class Main {
         cnt++;
 
         for (int k = 0; k < 4; k++) {
-            int nextRow = i + row[k];
-            int nextCol = j + col[k];
+            int nextI = i + di[k];
+            int nextJ = j + dj[k];
 
-            if (nextRow >= 0 && nextCol >= 0 && nextRow < N && nextCol < N) {
-                if (!visited[nextRow][nextCol] && map[nextRow][nextCol] == 1) {
-                    dfs(nextRow, nextCol);
+            if (nextI >= 0 && nextJ >= 0 && nextI < N && nextJ < N) {
+                if (!visited[nextI][nextJ] && map[nextI][nextJ] == 1) {
+                    dfs(nextI, nextJ);
                 }
             }
         }
@@ -71,17 +71,17 @@ public class Main {
 
         while (!queue.isEmpty()) {
             int[] cur = queue.poll();
-            int curRow = cur[0];
-            int curCol = cur[1];
+            int curI = cur[0];
+            int curJ = cur[1];
 
             for (int k = 0; k < 4; k++) {
-                int nextRow = curRow + row[k];
-                int nextCol = curCol + col[k];
+                int nextI = curI + di[k];
+                int nextJ = curJ + dj[k];
 
-                if (nextRow >= 0 && nextCol >= 0 && nextRow < N && nextCol < N) {
-                    if (!visited[nextRow][nextCol] && map[nextRow][nextCol] == 1) {
-                        visited[nextRow][nextCol] = true;
-                        queue.offer(new int[]{nextRow, nextCol});
+                if (nextI >= 0 && nextJ >= 0 && nextI < N && nextJ < N) {
+                    if (!visited[nextI][nextJ] && map[nextI][nextJ] == 1) {
+                        visited[nextI][nextJ] = true;
+                        queue.offer(new int[]{nextI, nextJ});
                         cnt++;
                     }
                 }
