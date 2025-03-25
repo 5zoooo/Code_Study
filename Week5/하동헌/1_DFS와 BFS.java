@@ -2,21 +2,19 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-    private static int N;
-    private static int M;
-    private static int V;
-    private static ArrayList<Integer>[] graph; // 인접 리스트
+    private static ArrayList<Integer>[] graph;
     private static boolean[] visited;
+    private static StringBuilder sb;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
         StringTokenizer st = new StringTokenizer(br.readLine());
-        N = Integer.parseInt(st.nextToken());
-        M = Integer.parseInt(st.nextToken());
-        V = Integer.parseInt(st.nextToken());
+        int N = Integer.parseInt(st.nextToken());
+        int M = Integer.parseInt(st.nextToken());
+        int V = Integer.parseInt(st.nextToken());
 
-        graph = new ArrayList[N + 1]; // 정점 번호가 1부터 시작
+        graph = new ArrayList[N + 1];
         for (int i = 1; i <= N; i++) {
             graph[i] = new ArrayList<>();
         }
@@ -25,44 +23,47 @@ public class Main {
             st = new StringTokenizer(br.readLine());
             int u = Integer.parseInt(st.nextToken());
             int v = Integer.parseInt(st.nextToken());
-            // 양방향 간선
+
             graph[u].add(v);
             graph[v].add(u);
         }
 
-        // 정점 번호가 작은 것부터 방문하기 위해 오름차순 정렬
         for (int i = 1; i <= N; i++) {
             Collections.sort(graph[i]);
         }
 
         visited = new boolean[N + 1];
+        sb = new StringBuilder();
         dfs(V);
-        System.out.println();
+        System.out.println(sb.toString().trim());
+
         visited = new boolean[N + 1];
+        sb = new StringBuilder();
         bfs(V);
+        System.out.println(sb.toString().trim());
 
         br.close();
     }
 
-    private static void dfs(int node) {
-        visited[node] = true;
-        System.out.print(node + " ");
+    private static void dfs(int V) {
+        visited[V] = true;
+        sb.append(V).append(" ");
 
-        for (int next : graph[node]) {
+        for (int next : graph[V]) {
             if (!visited[next]) {
                 dfs(next);
             }
         }
     }
 
-    private static void bfs(int startNode) {
+    private static void bfs(int V) {
         ArrayDeque<Integer> queue = new ArrayDeque<>();
-        visited[startNode] = true;
 
-        queue.offer(startNode);
+        visited[V] = true;
+        queue.offer(V);
         while (!queue.isEmpty()) {
             int curNode = queue.poll();
-            System.out.print(curNode + " ");
+            sb.append(curNode).append(" ");
 
             for (int next : graph[curNode]) {
                 if (!visited[next]) {
