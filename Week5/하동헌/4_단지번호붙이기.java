@@ -3,10 +3,10 @@ import java.util.*;
 
 public class Main {
     private static int N;
-    private static int[][] map;
+    private static int[][] inputMap;
     private static boolean[][] visited;
-    private static int[] di = {-1, 1, 0, 0}; // 상, 하
-    private static int[] dj = {0, 0, -1, 1}; // 좌, 우
+    private static final int[] di = {-1, 1, 0, 0};
+    private static final int[] dj = {0, 0, -1, 1};
     private static int cnt;
 
     public static void main(String[] args) throws IOException {
@@ -14,11 +14,11 @@ public class Main {
 
         N = Integer.parseInt(br.readLine());
 
-        map = new int[N][N];
+        inputMap = new int[N][N];
         for (int i = 0; i < N; i++) {
             String str = br.readLine();
             for (int j = 0; j < N; j++) {
-                map[i][j] = str.charAt(j) - '0';
+                inputMap[i][j] = str.charAt(j) - '0';
             }
         }
 
@@ -26,18 +26,18 @@ public class Main {
         ArrayList<Integer> list = new ArrayList<>();
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < N; j++) {
-                if (!visited[i][j] && map[i][j] == 1) { // 새로운 단지 시작
+                if (inputMap[i][j] == 1 && !visited[i][j]) {
                     cnt = 0;
-                    dfs(i, j);
-                    // bfs(i, j);
+                    // dfs(i, j);
+                    bfs(i, j);
                     list.add(cnt);
                 }
             }
         }
 
-        Collections.sort(list);
-
         System.out.println(list.size());
+
+        Collections.sort(list);
         for (int i = 0; i < list.size(); i++) {
             System.out.println(list.get(i));
         }
@@ -45,7 +45,6 @@ public class Main {
         br.close();
     }
 
-    // 현재 위치(i, j)에서 연결된 모든 집을 dfs로 방문하여 카운트
     private static void dfs(int i, int j) {
         visited[i][j] = true;
         cnt++;
@@ -54,35 +53,33 @@ public class Main {
             int nextI = i + di[k];
             int nextJ = j + dj[k];
 
-            if (nextI >= 0 && nextJ >= 0 && nextI < N && nextJ < N) {
-                if (!visited[nextI][nextJ] && map[nextI][nextJ] == 1) {
+            if (nextI >= 0 && nextI < N && nextJ >= 0 && nextJ < N) {
+                if (inputMap[nextI][nextJ] == 1 && !visited[nextI][nextJ]) {
                     dfs(nextI, nextJ);
                 }
             }
         }
     }
 
-    // 현재 위치(i, j)에서 연결된 모든 집을 bfs로 방문하여 카운트
     private static void bfs(int i, int j) {
         ArrayDeque<int[]> queue = new ArrayDeque<>();
+
         visited[i][j] = true;
         queue.offer(new int[]{i, j});
-        cnt = 1;
-
         while (!queue.isEmpty()) {
-            int[] cur = queue.poll();
-            int curI = cur[0];
-            int curJ = cur[1];
+            int[] curArr = queue.poll();
+            int curI = curArr[0];
+            int curJ = curArr[1];
+            cnt++;
 
             for (int k = 0; k < 4; k++) {
                 int nextI = curI + di[k];
                 int nextJ = curJ + dj[k];
 
-                if (nextI >= 0 && nextJ >= 0 && nextI < N && nextJ < N) {
-                    if (!visited[nextI][nextJ] && map[nextI][nextJ] == 1) {
+                if (nextI >= 0 && nextI < N && nextJ >= 0 && nextJ < N) {
+                    if (inputMap[nextI][nextJ] == 1 && !visited[nextI][nextJ]) {
                         visited[nextI][nextJ] = true;
                         queue.offer(new int[]{nextI, nextJ});
-                        cnt++;
                     }
                 }
             }
