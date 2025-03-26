@@ -2,10 +2,12 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-    private static int R, C;
-    private static char[][] inputMap;
-    private static int[] di = {-1, 1, 0, 0}; // 상, 하
-    private static int[] dj = {0, 0, -1, 1}; // 좌, 우
+    private static int R;
+    private static int C;
+    private static int N;
+    private static char[][] firstMap;
+    private static int[] di = {-1, 1, 0, 0};
+    private static int[] dj = {0, 0, -1, 1};
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -13,17 +15,18 @@ public class Main {
         StringTokenizer st = new StringTokenizer(br.readLine());
         R = Integer.parseInt(st.nextToken());
         C = Integer.parseInt(st.nextToken());
-        int N = Integer.parseInt(st.nextToken());
+        N = Integer.parseInt(st.nextToken());
 
-        inputMap = new char[R][C];
+        firstMap = new char[R][C];
         for (int i = 0; i < R; i++) {
             String str = br.readLine();
             for (int j = 0; j < C; j++) {
-                inputMap[i][j] = str.charAt(j);
+                firstMap[i][j] = str.charAt(j);
             }
         }
 
         char[][] ans = getAnsMap(N);
+
         for (int i = 0; i < R; i++) {
             for (int j = 0; j < C; j++) {
                 System.out.print(ans[i][j]);
@@ -36,21 +39,20 @@ public class Main {
 
     private static char[][] getAnsMap(int N) {
         if (N == 1) { // 그냥 초기 맵 그대로 반환
-            return inputMap;
+            return firstMap;
         }
         if (N % 2 == 0) { // 폭탄이 가득한 맵을 반환
-            return getAllBombMap();
+            return getAllBombsMap();
         }
 
-        char[][] firstBlastMap = getBlastMap(inputMap);
         if (N % 4 == 3) { // 폭탄이 첫 번째 터진 맵을 반환
-            return firstBlastMap;
+            return getBlastMap(firstMap);
         } else { // 폭탄이 두 번째 터진 맵을 반환
-            return getBlastMap(firstBlastMap);
+            return getBlastMap(getBlastMap(firstMap));
         }
     }
 
-    private static char[][] getAllBombMap() {
+    private static char[][] getAllBombsMap() {
         char[][] res = new char[R][C];
         for (int i = 0; i < R; i++) {
             for (int j = 0; j < C; j++) {
@@ -60,16 +62,18 @@ public class Main {
         return res;
     }
 
-    private static char[][] getBlastMap(char[][] map) {
-        // 전부 폭탄으로 채우고 상하좌우로 '.'만 찾는다는 마인드
-        char[][] res = getAllBombMap();
+    private static char[][] getBlastMap(char[][] inputMap) {
+        // 전부 폭탄으로 채우고 상하좌우로 '.'만 넣겠다는 마인드
+        char[][] res = getAllBombsMap();
         for (int i = 0; i < R; i++) {
             for (int j = 0; j < C; j++) {
-                if (map[i][j] == 'O') {
+                if (inputMap[i][j] == 'O') {
                     res[i][j] = '.';
+
                     for (int k = 0; k < 4; k++) {
                         int nextI = i + di[k];
                         int nextJ = j + dj[k];
+
                         if (nextI >= 0 && nextI < R && nextJ >= 0 && nextJ < C) {
                             res[nextI][nextJ] = '.';
                         }
@@ -80,3 +84,11 @@ public class Main {
         return res;
     }
 }
+
+/*
+4 4 3
+OOOO
+O..O
+O..O
+OOOO
+*/
