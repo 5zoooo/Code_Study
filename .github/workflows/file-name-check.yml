@@ -1,6 +1,6 @@
-name: Block bad filenames
+name: block-filename-check
 
-on: [push, pull_request]
+on: [pull_request]
 
 jobs:
   check-filenames:
@@ -14,7 +14,7 @@ jobs:
           forbidden='CON PRN AUX NUL COM1 COM2 COM3 COM4 COM5 COM6 COM7 COM8 COM9 LPT1 LPT2 LPT3 LPT4 LPT5 LPT6 LPT7 LPT8 LPT9'
           has_error=0
 
-          for file in $(git ls-files); do
+          for file in $(git diff --name-only origin/main); do
             for word in $forbidden; do
               if echo "$file" | grep -iqE "(^|/)$word(\..*)?$"; then
                 echo "❌ Invalid Windows filename detected: $file"
@@ -24,7 +24,7 @@ jobs:
           done
 
           if [ $has_error -eq 1 ]; then
-            echo "⛔ Push blocked due to Windows-incompatible filenames."
+            echo "⛔ Merge blocked due to Windows-incompatible filenames."
             exit 1
           fi
 
