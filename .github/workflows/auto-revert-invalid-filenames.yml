@@ -1,0 +1,40 @@
+name: Revert bad filenames on main
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  check-and-revert:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout latest commit
+        uses: actions/checkout@v3
+
+      - name: Check for invalid filenames (Windows incompatible)
+        id: check
+        run: |
+          echo "🔍 Checking for bad filenames..."
+          forbidden='CON PRN AUX NUL COM1 COM2 COM3 COM4 COM5 COM6 COM7 COM8 COM9 LPT1 LPT2 LPT3 LPT4 LPT5 LPT6 LPT7 LPT8 LPT9'
+          has_error=0
+
+          for file in $(git diff --name-only HEAD^ HEAD); do
+            for word in $forbidden; do
+              if echo "$file" | grep -iqE "(^|/)$word(\..*)?$"; then
+                echo "❌ Invalid Windows filename detected: $file"
+                has_error=1
+              fi
+            done
+          done
+
+          echo "::set-output name=has_error::$has_error"
+
+      - name: Revert commit if error
+        if: steps.check.outputs.has_error == '1'
+        run: |
+          echo "⛔ Reverting last commit due to invalid filenames"
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git revert --no-edit HEAD
+          git push origin main
