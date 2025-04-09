@@ -1,7 +1,7 @@
 # Code_Study
 ## 문제 풀이
 
-1. 모임장소: SK U타워 8층 강의실
+1. 모임장소: SK U타워 802호/803호/리세움
 2. 일주일에 5문제씩 
 3. 문제 선정 링크: https://github.com/tony9402/baekjoon/tree/main
 4. 벌칙: 커피사기
