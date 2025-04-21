@@ -1,29 +1,30 @@
 import java.io.*;
 import java.util.*;
 
-// 누적합 기본 문제
 public class Main {
     private static int N;
     private static int[] arr;
-    private static long[] sum;
+    private static long[] cumSum;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
         N = Integer.parseInt(br.readLine());
-        arr = new int[N + 1];
-        sum = new long[N + 1]; // 누적합 배열
+        arr = new int[N];
+        cumSum = new long[N];
 
         StringTokenizer st = new StringTokenizer(br.readLine());
-        for (int i = 1; i <= N; i++) {
+        arr[0] = Integer.parseInt(st.nextToken());
+        cumSum[0] = arr[0];
+        for (int i = 1; i < N; i++) {
             arr[i] = Integer.parseInt(st.nextToken());
-            sum[i] = sum[i - 1] + arr[i];
+            cumSum[i] = cumSum[i - 1] + arr[i];
         }
 
         long ans = 0;
-        for (int i = 1; i < N; i++) {
-            long res = getSum(i + 1, N);
-            ans += res * arr[i];
+        for (int i = 0; i < N - 1; i++) {
+            long res = getSum(i + 1, N - 1);
+            ans += arr[i] * res;
         }
 
         System.out.println(ans);
@@ -32,6 +33,6 @@ public class Main {
     }
 
     private static long getSum(int left, int right) {
-        return sum[right] - sum[left - 1];
+        return cumSum[right] - cumSum[left - 1];
     }
 }
