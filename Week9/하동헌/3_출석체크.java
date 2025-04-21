@@ -1,6 +1,7 @@
 import java.io.*;
 import java.util.*;
 
+// 누적 합 사용 X
 public class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -40,19 +41,18 @@ public class Main {
             }
         }
 
-        // cumSum[i]: 3번부터 i번까지 출석을 한 인원 수 누적 합
-        int[] cumSum = new int[N + 3];
-        for (int i = 3; i <= N + 2; i++) {
-            cumSum[i] = cumSum[i - 1] + ((visited[i]) ? 1 : 0);
-        }
-
-        // 쿼리 처리
         while (M-- > 0) {
             st = new StringTokenizer(br.readLine());
             int S = Integer.parseInt(st.nextToken());
             int E = Integer.parseInt(st.nextToken());
 
-            System.out.println(E - S + 1 - (cumSum[E] - cumSum[S - 1]));
+            int cnt = 0;
+            for (int i = S; i <= E; i++) {
+                if (!visited[i]) {
+                    cnt++;
+                }
+            }
+            System.out.println(cnt);
         }
 
         br.close();
