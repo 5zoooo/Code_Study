@@ -9,28 +9,28 @@ public class Main {
         int[] arr = new int[N];
 
         StringTokenizer st = new StringTokenizer(br.readLine());
-        for (int i = 0; i < N; i++) {
+        for (int i = 0; i < arr.length; i++) {
             arr[i] = Integer.parseInt(st.nextToken());
         }
 
         Arrays.sort(arr);
 
         int absMin = 2147483647;
-        int ansIdx1 = 0, ansIdx2 = 0;
         int l = 0;
-        int r = N - 1;
+        int r = arr.length - 1;
+        int ansIdx1 = 0, ansIdx2 = 0;
         while (l < r) {
             int res = arr[l] + arr[r];
-            int absRes = Math.abs(res);
+            int absRes = Math.abs(arr[l] + arr[r]);
             if (absRes < absMin) {
                 absMin = absRes;
                 ansIdx1 = l;
                 ansIdx2 = r;
             }
 
-            if (res < 0) { // 합이 음수면 왼쪽 포인터 이동(더 큰 수 필요)
+            if (res < 0) { // 합이 음수면 더 큰 수가 필요
                 l++;
-            } else { // 합이 양수면 오른쪽 포인터 이동(더 작은 수 필요)
+            } else { // 합이 양수면 더 작은 수가 필요
                 r--;
             }
         }
@@ -40,3 +40,8 @@ public class Main {
         br.close();
     }
 }
+
+/*
+-99 -2 -1 4 98: -99 98
+-50 -10 0 5 120: -10 5 or 0 5
+*/
