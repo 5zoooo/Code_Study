@@ -12,6 +12,7 @@ public class Main {
         int K = Integer.parseInt(st.nextToken());
 
         int[] arr = new int[N];
+
         st = new StringTokenizer(br.readLine());
         for (int i = 0; i < N; i++) {
             arr[i] = Integer.parseInt(st.nextToken());
@@ -19,19 +20,15 @@ public class Main {
 
         int[] visited = new int[100001];
         int maxLen = 0;
-        int l = 0, r = 0;
-        while (r < N) {
+        int l = 0;
+        for (int r = 0; r < arr.length; r++) {
             visited[arr[r]]++;
-
-            // 만약 K번을 초과하면 l을 오른쪽으로 이동시켜서 해결
-            // 이 과정을 통해 윈도우 안에는 항상 K번 이하로만 등장
             while (visited[arr[r]] > K) {
                 visited[arr[l]]--;
                 l++;
             }
-            maxLen = Math.max(maxLen, r - l + 1);
 
-            r++;
+            maxLen = Math.max(r - l + 1, maxLen);
         }
 
         System.out.println(maxLen);
@@ -39,3 +36,5 @@ public class Main {
         br.close();
     }
 }
+// 만약 K번을 초과하면 l을 오른쪽으로 이동시켜서 해결
+// 이 과정을 통해 윈도우 안에는 항상 K번 이하로만 등장
